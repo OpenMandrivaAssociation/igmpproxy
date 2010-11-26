@@ -3,7 +3,7 @@ Version: 0.1
 Release: %mkrel 1
 License: GPL
 Group: System/Servers
-Summary: IGMPproxy is a simple mulitcast router for Linux that only uses the IGMP protocol
+Summary: igmpproxy is a simple multicast router for Linux that only uses the IGMP protocol
 BuildRoot: %{_tmppath}/%{name}-%{version}
 
 Source0: http://sourceforge.net/projects/igmpproxy/igmpproxy-%{version}.tar.gz
