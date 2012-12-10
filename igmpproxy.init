@@ -1,0 +1,79 @@
+#!/bin/bash
+#
+# igmpproxy       Starts and stops the igmpproxy service
+#              used to provide network services status.
+#
+# chkconfig: 345 18 82
+# description: igmpproxy network monitor
+# pidfile: /var/run/igmpproxy.pid
+# config: /etc/igmpproxy.conf
+
+# Comments to support LSB init script conventions
+### BEGIN INIT INFO
+# Provides: igmpproxy
+# Required-Start: $network
+# Requires-Stop: $network
+# Default-Start:  3 4 5
+# Default-Stop: 0 1 6
+# Short-Description: Starts and stops the igmpproxy service.
+# Description: igmpproxy is a simple multicast router for Linux that only uses the IGMP protocol.
+### END INIT INFO
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+# Source networking configuration.
+. /etc/sysconfig/network
+
+# Check that networking is up.
+[ "${NETWORKING}" = "no" ] && exit 0
+
+[ -f /etc/igmpproxy.conf ] || exit 0
+
+RETVAL=0
+
+# See how we were called.
+case "$1" in
+  start)
+    if [ -n "`/sbin/pidof igmpproxy`" ]; then
+        action "Starting igmpproxy fail (already running): " /bin/false
+        exit 1
+    fi
+    gprintf "Starting igmpproxy daemon"
+    daemon igmpproxy -d /etc/igmpproxy.conf 2>/dev/null 1>/dev/null &
+    sleep 1
+    if [ -n "`/sbin/pidof igmpproxy`" ]; then
+	success
+    fi
+    RETVAL=$?
+    echo
+    [ $RETVAL -eq 0 ] && touch /var/lock/subsys/igmpproxy
+    ;;
+  stop)
+    gprintf "Shutting down igmpproxy daemon: "
+    killproc igmpproxy
+    RETVAL=$?
+    echo
+    [ $RETVAL -eq 0 ] && rm -f /var/lock/subsys/igmpproxy
+    ;;
+  status)
+    status igmpproxy
+    RETVAL=$?
+    ;;
+  restart|reload)
+    $0 stop
+    $0 start
+    RETVAL=$?
+    ;;
+  condrestart)
+    if [ -f /var/lock/subsys/igmpproxy ]; then
+        $0 stop
+        $0 start
+    fi
+    ;;
+  *)
+    gprintf "Usage: igmpproxy {start|stop|status|restart|reload|condrestart}\n"
+    exit 1
+esac
+
+exit $RETVAL
