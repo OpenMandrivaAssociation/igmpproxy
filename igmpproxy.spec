@@ -33,7 +33,8 @@ install -D -m 755 %{SOURCE1} %{buildroot}%{_initrddir}/%{name}
 %defattr(-,root,root)
 %doc AUTHORS README NEWS
 %{_sbindir}/%{name}
-%{_mandir}/*
+%{_mandir}/man5/*
+%{_mandir}/man8/*
 %{_initrddir}/%{name}
 %config(noreplace) %{_sysconfdir}/%{name}.conf
 
