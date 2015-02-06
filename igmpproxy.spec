@@ -1,6 +1,6 @@
 Name: igmpproxy
 Version: 0.1
-Release: 5
+Release: 6
 License: GPL
 Group: System/Servers
 Summary: Simple mulitcast router for Linux that only uses the IGMP protocol
